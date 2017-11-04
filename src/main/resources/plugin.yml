@@ -1,0 +1,5 @@
+name: ForcePowers
+version: ${project.version}
+main: me.matthewe.forcepowers.ForcePowers
+authors: [matt11matthew]
+description: ForcePowers
