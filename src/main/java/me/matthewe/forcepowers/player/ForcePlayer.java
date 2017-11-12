@@ -7,6 +7,7 @@ import me.matthewe.forcepowers.player.power.PowerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -224,12 +225,37 @@ public class ForcePlayer {
         }
         isViewingSithMenu = true;
         InventoryMenuBuilder jediMenu = new InventoryMenuBuilder().withSize(27).withTitle("Sith Menu");
-        int slot = 0;
+        int slot = 18;
+        ArrayList<String> loreList = new ArrayList<String>();
+
+        ItemStack book = new ItemStack(Material.BOOK);
+        ItemMeta bookMeta = book.getItemMeta();
+        bookMeta.setDisplayName("§fSkill Points");
+        loreList.add("§7You currently have §f" +skillPoints+ "§7 skill points.");
+        bookMeta.setLore(loreList);
+        book.setItemMeta(bookMeta);
+        loreList.clear();
+
+        ItemStack cobweb = new ItemStack(Material.WEB);
+        ItemMeta cobwebMeta = cobweb.getItemMeta();
+        cobwebMeta.setDisplayName("§fExit");
+        loreList.add("§7Click here to exit the menu.");
+        cobwebMeta.setLore(loreList);
+        cobweb.setItemMeta(cobwebMeta);
+        loreList.clear();
+        jediMenu.withItem(0, book);
+        jediMenu.withItem(8, cobweb, (player1, clickType, itemStack) -> {
+            setViewingSithMenu(false);
+            player.closeInventory();
+        }, ClickType.LEFT);
         for (Power power : PowerManager.getInstance().getPowers()) {
-            if (power.getSide()!=Side.SITH){
+            if (power.getSide()==Side.JEDI){
                 continue;
             }
             int level = 0;
+            if (slot == 8) {
+                slot++;
+            }
             Integer integer = levelMap.get(power.getName());
             if (levelMap.containsKey(power.getName())) {
                 level = integer;
@@ -334,15 +360,38 @@ public class ForcePlayer {
         }
         jediMenu.show(player);
     }
+
     public void openJediMenu(Player player) {
         if (isViewingJediMenu) {
             return;
         }
         isViewingJediMenu = true;
         InventoryMenuBuilder jediMenu = new InventoryMenuBuilder().withSize(27).withTitle("Jedi Menu");
-        int slot = 0;
+        int slot = 18;
+        ArrayList<String> loreList = new ArrayList<String>();
+
+        ItemStack book = new ItemStack(Material.BOOK);
+        ItemMeta bookMeta = book.getItemMeta();
+        bookMeta.setDisplayName("§fSkill Points");
+        loreList.add("§7You currently have §f" +skillPoints+ "§7 skill points.");
+        bookMeta.setLore(loreList);
+        book.setItemMeta(bookMeta);
+        loreList.clear();
+
+        ItemStack cobweb = new ItemStack(Material.WEB);
+        ItemMeta cobwebMeta = cobweb.getItemMeta();
+        cobwebMeta.setDisplayName("§fExit");
+        loreList.add("§7Click here to exit the menu.");
+        cobwebMeta.setLore(loreList);
+        cobweb.setItemMeta(cobwebMeta);
+        loreList.clear();
+        jediMenu.withItem(0, book);
+        jediMenu.withItem(8, cobweb, (player1, clickType, itemStack) -> {
+            setViewingJediMenu(false);
+            player.closeInventory();
+        }, ClickType.LEFT);
         for (Power power : PowerManager.getInstance().getPowers()) {
-            if (power.getSide()!=Side.JEDI){
+            if (power.getSide()==Side.SITH){
                 continue;
             }
             int level = 0;

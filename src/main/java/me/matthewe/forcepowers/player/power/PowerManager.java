@@ -1,8 +1,6 @@
 package me.matthewe.forcepowers.player.power;
 
-import me.matthewe.forcepowers.player.power.powers.ForceHealPower;
-import me.matthewe.forcepowers.player.power.powers.ForceLeapPower;
-import me.matthewe.forcepowers.player.power.powers.ForcePushPower;
+import me.matthewe.forcepowers.player.power.powers.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +27,11 @@ public class PowerManager  {
         registerPower(new ForcePushPower());
         registerPower(new ForceLeapPower());
         registerPower(new ForceHealPower());
+        registerPower(new ForcePullPower());
+        registerPower(new ForceLevitatePower());
+        registerPower(new ForceChokePower());
+        registerPower(new ForceDrainPower());
+        registerPower(new ForceWoundPower());
     }
 
     public void registerPower(Power power) {

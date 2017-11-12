@@ -17,6 +17,7 @@ public class JoinListener implements Listener {
             return;
         }
         event.setJoinMessage(null);
+        event.getPlayer().addAttachment(ForcePowers.getInstance(), "forcepower.sith", true);
         ForcePlayers.getInstance().loadProfile(event.getPlayer());
     }
 

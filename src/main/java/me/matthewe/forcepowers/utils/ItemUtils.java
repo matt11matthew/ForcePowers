@@ -82,7 +82,7 @@ public class ItemUtils {
         itemStack = CraftItemStack.asBukkitCopy(itemStack1);
         ItemMeta itemMeta = itemStack.getItemMeta();
         Power power= PowerManager.getInstance().getPower(nextPower);
-        itemMeta.setDisplayName(side.getChatColor() + side.getName()+ " Wand");
+        itemMeta.setDisplayName(side.getChatColor() + side.getName()+ " Wand " + ChatColor.WHITE + nextPower);
         itemMeta.setLore(Arrays.asList(ChatColor.GOLD + "Current Power: " + ChatColor.WHITE + nextPower, " ", ChatColor.GRAY + "Right click to use power", ChatColor.GRAY +"Left click to switch between powers"));
         itemStack.setItemMeta(itemMeta);
         return itemStack;
