@@ -71,7 +71,7 @@ public class ForcePowerCommand extends BaseCommand  {
             onlinePlayer.player.getInventory().addItem(ItemUtils.createWand(forcePlayer,side,randomPower));
         }
     }
-    @Subcommand("sithmenu")
+    @Subcommand("sith menu")
     @CommandPermission("forcepower.sithmenu")
     public void onSithMenu(Player player) {
         ForcePlayer forcePlayer = ForcePlayers.getInstance().get(player.getUniqueId());
@@ -79,7 +79,7 @@ public class ForcePowerCommand extends BaseCommand  {
             forcePlayer.openSithMenu(player);
         }
     }
-    @Subcommand("jedimenu")
+    @Subcommand("jedi menu")
     @CommandPermission("forcepower.jedimenu")
     public void onJediMenu(Player player) {
         ForcePlayer forcePlayer = ForcePlayers.getInstance().get(player.getUniqueId());
@@ -145,6 +145,21 @@ public class ForcePowerCommand extends BaseCommand  {
         if (forcePlayer != null) {
             forcePlayer.setSkillPoints((forcePlayer.getSkillPoints() + amount));
             player.sendMessage(ChatColor.DARK_AQUA +"Spawned in " + ChatColor.AQUA + amount + ChatColor.DARK_AQUA + " skill points.");
+        }
+    }
+
+    @CommandPermission("forcepower.skillpoint.spawn")
+    @Syntax("&b<player> <amount> &8- &3Skill Points")
+    @Subcommand("give sp")
+    public void onSpawnSpOther(CommandSender sender, OnlinePlayer onlinePlayer, Integer amount) {
+        if (amount < 1) {
+            sender.sendMessage(ChatColor.RED +"You must enter at least 1 skill point.");
+            return;
+        }
+        ForcePlayer forcePlayer = ForcePlayers.getInstance().get(onlinePlayer.player.getUniqueId());
+        if (forcePlayer != null) {
+            forcePlayer.setSkillPoints((forcePlayer.getSkillPoints() + amount));
+            sender.sendMessage(ChatColor.DARK_AQUA +"Spawned in " + ChatColor.AQUA + amount + ChatColor.DARK_AQUA + " skill points.");
         }
     }
 }

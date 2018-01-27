@@ -1,5 +1,7 @@
 package me.matthewe.forcepowers.listeners;
 
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.matthewe.forcepowers.ForcePowers;
 import me.matthewe.forcepowers.player.ForcePlayer;
 import me.matthewe.forcepowers.player.ForcePlayers;
@@ -31,6 +33,21 @@ public class PowerListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
+        List<String> allowedRegions = ForcePowers.getAllowedRegions();
+
+        int allowed = 0;
+        int disallow = 0;
+        WorldGuardPlugin guardPlugin = ForcePowers.getGuardPlugin();
+        for (ProtectedRegion protectedRegion : guardPlugin.getRegionContainer().createQuery().getApplicableRegions(player.getLocation()).getRegions()) {
+            if (allowedRegions.contains(protectedRegion.getId().toLowerCase())) {
+                allowed++;
+            } else {
+                disallow++;
+            }
+        }
+        if (disallow > allowed) {
+            return;
+        }
         if (player.getItemInHand() != null && (ItemUtils.isForceWand(player.getItemInHand()))) {
             event.setCancelled(true);
             event.setUseInteractedBlock(Event.Result.DENY);
@@ -45,6 +62,7 @@ public class PowerListener implements Listener {
                     String nextPower = forcePlayer.getNextPower(wandPower);
                     if (nextPower !=null) {
                         player.setItemInHand(ItemUtils.createWand(forcePlayer, PowerManager.getInstance().getPower(nextPower).getSide(), nextPower));
+                        player.sendMessage(ChatColor.AQUA +"Changed power to " + ChatColor.WHITE + nextPower + ChatColor.AQUA + ".");
                     }
                 }
                 waitList.add(player.getUniqueId());
@@ -83,6 +101,11 @@ public class PowerListener implements Listener {
                             LivingEntity target = PlayerUtils.getTarget(player);
                             if (target != null) {
                                 power.use(forcePlayer, target);
+                                if (target instanceof Player) {
+                                    player.sendMessage(ChatColor.GREEN + " used power " + power.getName() + " on " + target.getName() + "");
+                                }
+                            } else {
+                                player.sendMessage(ChatColor.RED +"Please select a target.");
                             }
                         }
                         waitList.add(player.getUniqueId());

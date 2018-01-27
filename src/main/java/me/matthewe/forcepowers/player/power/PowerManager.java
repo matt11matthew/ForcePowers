@@ -32,6 +32,11 @@ public class PowerManager  {
         registerPower(new ForceChokePower());
         registerPower(new ForceDrainPower());
         registerPower(new ForceWoundPower());
+        registerPower(new ForceResistance());
+        registerPower(new ForceCombustion());
+        registerPower(new ForceRage());
+        registerPower(new ForceLightningPower());
+        registerPower(new ForceStunPower());
     }
 
     public void registerPower(Power power) {

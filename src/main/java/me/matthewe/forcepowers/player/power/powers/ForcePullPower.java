@@ -39,7 +39,12 @@ public class ForcePullPower extends Power {
                         coolDown = 20;
                     }
                     final int pullNumber =level;
-                    target.setVelocity(forcePlayer.getLocation().getDirection().multiply(-pullNumber));
+                    if (target.getVelocity().distanceSquared(forcePlayer.getLocation().toVector()) < pullNumber) {
+                        target.teleport(forcePlayer.getLocation());
+                    } else {
+                        target.setVelocity(forcePlayer.getLocation().getDirection().multiply(-(double)(pullNumber/2)));
+
+                    }
                     forcePlayer.setCoolDown(getName(), coolDown);
                 }
 

@@ -296,69 +296,102 @@ public class ForcePlayer {
             int finalLevel1 = level;
             int finalSlot = slot;
             jediMenu.withItem(slot, itemStack, (player1, action, item) -> {
-                if (finalLevel !=power.getMaxLevel()) {
-                    int cost = power.getPowerLevelMap().get(finalLevel + 1).getCost();
-                    if (getSkillPoints()< cost) {
-                        player1.sendMessage(ChatColor.RED + "You don't have enough skill points to purchase " + power.getName());
-                    } else {
-                        setSkillPoints(getSkillPoints()-cost);
-                        if (!levelMap.containsKey(power.getName())) {
-                            unlockPower(power);
-                            player1.sendMessage(ChatColor.GREEN + "Congrats! You have unlocked " + ChatColor.BOLD + power.getName() + "!");
+                setViewingSithMenu(false);
+                player.closeInventory();
+                openConfirmGui(player1,power, finalLevel, (power1, lvl) -> {
+                    if (finalLevel != power1.getMaxLevel()) {
+                        int cost = power1.getPowerLevelMap().get(finalLevel + 1).getCost();
+                        if (getSkillPoints()< cost) {
+                            player1.sendMessage(ChatColor.RED + "You don't have enough skill points to purchase " + power1.getName());
                         } else {
-                            levelUpPower(power.getName());
-                            player1.sendMessage(ChatColor.GREEN + "Congrats! You have leveled up " + ChatColor.BOLD + power.getName() + "" + ChatColor.GREEN + " to " + ChatColor.BOLD + getLevel(power.getName()));
-                        }
-                        ItemStack itemStack1 = new ItemStack(power.getMaterial());
-                        ItemMeta itemMeta1 = itemStack1.getItemMeta();
-                        itemMeta1.setDisplayName(power.getSide().getChatColor() + power.getName());
-                        List<String> loreStringList1 = new ArrayList<>();
-                        String levelString1 = "";
-                        if (finalLevel1 == power.getMaxLevel()) {
-                            levelString1 = ChatColor.RED + ChatColor.BOLD.toString() + "MAX";
-                        } else {
-                            levelString1 = String.valueOf(finalLevel1 + 1);
-                        }
-                        String coolDownString1 = "";
-                        if (finalLevel1 == power.getMaxLevel()) {
-                            coolDownString1 = String.valueOf(power.getPowerLevelMap().get(power.getMaxLevel()).getCoolDown());
-                        } else {
-                            coolDownString1 = String.valueOf(power.getPowerLevelMap().get(finalLevel1 + 1).getCoolDown());
-                        }
-                        String costString1 = "";
-                        if (finalLevel1 == power.getMaxLevel()) {
-                            costString1 = ChatColor.RED + ChatColor.BOLD.toString() + "MAX";
-                        } else {
-                            costString1 = String.valueOf(power.getPowerLevelMap().get(finalLevel1 + 1).getCost());
-                        }
-                        loreStringList1.add("&6Level &f" + levelString1);
-                        loreStringList1.add("&6Cost &f" + costString1);
-                        loreStringList1.add("&6Cooldown &f" + coolDownString1);
-                        if (finalLevel1 == power.getMaxLevel()) {
-                            loreStringList1.add("&7" + power.getDescription(finalLevel1));
-                        } else {
-                            loreStringList1.add("&7" + power.getDescription(finalLevel1 + 1));
-                        }
-                        itemMeta1.setLore(loreStringList1.stream().map(lore -> ChatColor.translateAlternateColorCodes('&', lore)).collect(Collectors.toList()));
-                        itemStack1.setItemMeta(itemMeta1);
-                        player1.closeInventory();
-                        jediMenu.dispose();
-
-                        new BukkitRunnable(){
-
-                            @Override
-                            public void run() {
-                                openSithMenu(player1);
+                            setSkillPoints(getSkillPoints()-cost);
+                            if (!levelMap.containsKey(power1.getName())) {
+                                unlockPower(power1);
+                                player1.sendMessage(ChatColor.GREEN + "Congrats! You have unlocked " + ChatColor.BOLD + power1.getName() + "!");
+                            } else {
+                                levelUpPower(power1.getName());
+                                player1.sendMessage(ChatColor.GREEN + "Congrats! You have leveled up " + ChatColor.BOLD + power1.getName() + "" + ChatColor.GREEN + " to " + ChatColor.BOLD + getLevel(power1.getName()));
                             }
-                        }.runTaskLater(ForcePowers.getInstance(), 2L);
+                            ItemStack itemStack1 = new ItemStack(power1.getMaterial());
+                            ItemMeta itemMeta1 = itemStack1.getItemMeta();
+                            itemMeta1.setDisplayName(power1.getSide().getChatColor() + power1.getName());
+                            List<String> loreStringList1 = new ArrayList<>();
+                            String levelString1 = "";
+                            if (finalLevel1 == power1.getMaxLevel()) {
+                                levelString1 = ChatColor.RED + ChatColor.BOLD.toString() + "MAX";
+                            } else {
+                                levelString1 = String.valueOf(finalLevel1 + 1);
+                            }
+                            String coolDownString1 = "";
+                            if (finalLevel1 == power1.getMaxLevel()) {
+                                coolDownString1 = String.valueOf(power1.getPowerLevelMap().get(power1.getMaxLevel()).getCoolDown());
+                            } else {
+                                coolDownString1 = String.valueOf(power1.getPowerLevelMap().get(finalLevel1 + 1).getCoolDown());
+                            }
+                            String costString1 = "";
+                            if (finalLevel1 == power1.getMaxLevel()) {
+                                costString1 = ChatColor.RED + ChatColor.BOLD.toString() + "MAX";
+                            } else {
+                                costString1 = String.valueOf(power1.getPowerLevelMap().get(finalLevel1 + 1).getCost());
+                            }
+                            loreStringList1.add("&6Level &f" + levelString1);
+                            loreStringList1.add("&6Cost &f" + costString1);
+                            loreStringList1.add("&6Cooldown &f" + coolDownString1);
+                            if (finalLevel1 == power1.getMaxLevel()) {
+                                loreStringList1.add("&7" + power1.getDescription(finalLevel1));
+                            } else {
+                                loreStringList1.add("&7" + power1.getDescription(finalLevel1 + 1));
+                            }
+                            itemMeta1.setLore(loreStringList1.stream().map(lore -> ChatColor.translateAlternateColorCodes('&', lore)).collect(Collectors.toList()));
+                            itemStack1.setItemMeta(itemMeta1);
+                            player1.closeInventory();
+                            jediMenu.dispose();
+
+                            new BukkitRunnable(){
+
+                                @Override
+                                public void run() {
+                                    openSithMenu(player1);
+                                }
+                            }.runTaskLater(ForcePowers.getInstance(), 2L);
+                        }
+                    } else {
+                        player1.sendMessage(ChatColor.RED + "That power is fully upgraded.");
                     }
-                } else {
-                    player1.sendMessage(ChatColor.RED + "That power is fully upgraded.");
-                }
+                });
+
             }, ClickType.LEFT);
             slot++;
         }
         jediMenu.show(player);
+    }
+
+    private void openConfirmGui(Player player, Power power, int lvl, OnConfirm onConfirm) {
+        InventoryMenuBuilder menuBuilder = new InventoryMenuBuilder().withSize(27).withTitle(ChatColor.GREEN + ChatColor.BOLD.toString() + "Are you sure?");
+
+        ItemStack itemStack = new ItemStack(Material.EMERALD_BLOCK);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "YES");
+        itemStack.setItemMeta(itemMeta);
+
+        ItemStack itemStack1 = new ItemStack(Material.REDSTONE_BLOCK);
+        ItemMeta itemMeta1 = itemStack.getItemMeta();
+        itemMeta1.setDisplayName(ChatColor.DARK_RED.toString() + ChatColor.BOLD.toString() + "NO");
+        itemStack1.setItemMeta(itemMeta);
+        menuBuilder.withItem(12, itemStack, (player1, clickType, itemStack2) -> {
+            player1.closeInventory();
+            onConfirm.confirm(power, lvl);
+        },ClickType.LEFT);
+        menuBuilder.withItem(14, itemStack1, (player1, clickType, itemStack2) -> {
+            player1.closeInventory();
+            onConfirm.confirm(power, lvl);
+        },ClickType.LEFT);
+    }
+
+    @FunctionalInterface
+    interface OnConfirm {
+
+        void confirm(Power power, int lvl);
     }
 
     public void openJediMenu(Player player) {
@@ -435,65 +468,70 @@ public class ForcePlayer {
             int finalLevel1 = level;
             int finalSlot = slot;
             jediMenu.withItem(slot, itemStack, (player1, action, item) -> {
-                if (finalLevel !=power.getMaxLevel()) {
-                    int cost = power.getPowerLevelMap().get(finalLevel + 1).getCost();
-                    if (getSkillPoints()< cost) {
-                        player1.sendMessage(ChatColor.RED + "You don't have enough skill points to purchase " + power.getName());
-                    } else {
-                        setSkillPoints(getSkillPoints()-cost);
-                        if (!levelMap.containsKey(power.getName())) {
-                            unlockPower(power);
-                            player1.sendMessage(ChatColor.GREEN + "Congrats! You have unlocked " + ChatColor.BOLD + power.getName() + "!");
+                setViewingJediMenu(false);
+                player1.closeInventory();
+                openConfirmGui(player1, power, finalLevel, (power1, lvl) -> {
+                    if (finalLevel != power1.getMaxLevel()) {
+                        int cost = power1.getPowerLevelMap().get(finalLevel + 1).getCost();
+                        if (getSkillPoints()< cost) {
+                            player1.sendMessage(ChatColor.RED + "You don't have enough skill points to purchase " + power1.getName());
                         } else {
-                            levelUpPower(power.getName());
-                            player1.sendMessage(ChatColor.GREEN + "Congrats! You have leveled up " + ChatColor.BOLD + power.getName() + "" + ChatColor.GREEN + " to " + ChatColor.BOLD + getLevel(power.getName()));
-                        }
-                        ItemStack itemStack1 = new ItemStack(power.getMaterial());
-                         ItemMeta itemMeta1 = itemStack1.getItemMeta();
-                        itemMeta1.setDisplayName(power.getSide().getChatColor() + power.getName());
-                       List<String> loreStringList1 = new ArrayList<>();
-                        String levelString1 = "";
-                        if (finalLevel1 == power.getMaxLevel()) {
-                            levelString1 = ChatColor.RED + ChatColor.BOLD.toString() + "MAX";
-                        } else {
-                            levelString1 = String.valueOf(finalLevel1 + 1);
-                        }
-                        String coolDownString1 = "";
-                        if (finalLevel1 == power.getMaxLevel()) {
-                            coolDownString1 = String.valueOf(power.getPowerLevelMap().get(power.getMaxLevel()).getCoolDown());
-                        } else {
-                            coolDownString1 = String.valueOf(power.getPowerLevelMap().get(finalLevel1 + 1).getCoolDown());
-                        }
-                        String costString1 = "";
-                        if (finalLevel1 == power.getMaxLevel()) {
-                            costString1 = ChatColor.RED + ChatColor.BOLD.toString() + "MAX";
-                        } else {
-                            costString1 = String.valueOf(power.getPowerLevelMap().get(finalLevel1 + 1).getCost());
-                        }
-                        loreStringList1.add("&6Level &f" + levelString1);
-                        loreStringList1.add("&6Cost &f" + costString1);
-                        loreStringList1.add("&6Cooldown &f" + coolDownString1);
-                        if (finalLevel1 == power.getMaxLevel()) {
-                            loreStringList1.add("&7" + power.getDescription(finalLevel1));
-                        } else {
-                            loreStringList1.add("&7" + power.getDescription(finalLevel1 + 1));
-                        }
-                        itemMeta1.setLore(loreStringList1.stream().map(lore -> ChatColor.translateAlternateColorCodes('&', lore)).collect(Collectors.toList()));
-                        itemStack1.setItemMeta(itemMeta1);
-                        player1.closeInventory();
-                        jediMenu.dispose();
-
-                        new BukkitRunnable(){
-
-                            @Override
-                            public void run() {
-                                openJediMenu(player1);
+                            setSkillPoints(getSkillPoints()-cost);
+                            if (!levelMap.containsKey(power1.getName())) {
+                                unlockPower(power1);
+                                player1.sendMessage(ChatColor.GREEN + "Congrats! You have unlocked " + ChatColor.BOLD + power1.getName() + "!");
+                            } else {
+                                levelUpPower(power1.getName());
+                                player1.sendMessage(ChatColor.GREEN + "Congrats! You have leveled up " + ChatColor.BOLD + power1.getName() + "" + ChatColor.GREEN + " to " + ChatColor.BOLD + getLevel(power1.getName()));
                             }
-                        }.runTaskLater(ForcePowers.getInstance(), 2L);
+                            ItemStack itemStack1 = new ItemStack(power1.getMaterial());
+                            ItemMeta itemMeta1 = itemStack1.getItemMeta();
+                            itemMeta1.setDisplayName(power1.getSide().getChatColor() + power1.getName());
+                            List<String> loreStringList1 = new ArrayList<>();
+                            String levelString1 = "";
+                            if (finalLevel1 == power1.getMaxLevel()) {
+                                levelString1 = ChatColor.RED + ChatColor.BOLD.toString() + "MAX";
+                            } else {
+                                levelString1 = String.valueOf(finalLevel1 + 1);
+                            }
+                            String coolDownString1 = "";
+                            if (finalLevel1 == power1.getMaxLevel()) {
+                                coolDownString1 = String.valueOf(power1.getPowerLevelMap().get(power1.getMaxLevel()).getCoolDown());
+                            } else {
+                                coolDownString1 = String.valueOf(power1.getPowerLevelMap().get(finalLevel1 + 1).getCoolDown());
+                            }
+                            String costString1 = "";
+                            if (finalLevel1 == power1.getMaxLevel()) {
+                                costString1 = ChatColor.RED + ChatColor.BOLD.toString() + "MAX";
+                            } else {
+                                costString1 = String.valueOf(power1.getPowerLevelMap().get(finalLevel1 + 1).getCost());
+                            }
+                            loreStringList1.add("&6Level &f" + levelString1);
+                            loreStringList1.add("&6Cost &f" + costString1);
+                            loreStringList1.add("&6Cooldown &f" + coolDownString1);
+                            if (finalLevel1 == power1.getMaxLevel()) {
+                                loreStringList1.add("&7" + power1.getDescription(finalLevel1));
+                            } else {
+                                loreStringList1.add("&7" + power1.getDescription(finalLevel1 + 1));
+                            }
+                            itemMeta1.setLore(loreStringList1.stream().map(lore -> ChatColor.translateAlternateColorCodes('&', lore)).collect(Collectors.toList()));
+                            itemStack1.setItemMeta(itemMeta1);
+                            player1.closeInventory();
+                            jediMenu.dispose();
+
+                            new BukkitRunnable(){
+
+                                @Override
+                                public void run() {
+                                    openJediMenu(player1);
+                                }
+                            }.runTaskLater(ForcePowers.getInstance(), 2L);
+                        }
+                    } else {
+                        player1.sendMessage(ChatColor.RED + "That power is fully upgraded.");
                     }
-                } else {
-                    player1.sendMessage(ChatColor.RED + "That power is fully upgraded.");
-                }
+
+                });
             }, ClickType.LEFT);
             slot++;
         }

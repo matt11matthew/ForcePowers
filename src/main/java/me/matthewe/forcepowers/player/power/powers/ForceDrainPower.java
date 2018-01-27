@@ -32,7 +32,7 @@ public class ForceDrainPower extends Power {
                 @Override
                 public void onUse(ForcePlayer forcePlayer, LivingEntity target) {
 
-                    int debuff =(level+5);
+                    int debuff = (level + 5);
                     int coolDown = 30;
                     int hearts = 1;
                     if (level > 1) {
@@ -41,7 +41,7 @@ public class ForceDrainPower extends Power {
                         }
                     }
                     if (level == 2) {
-                        coolDown =35;
+                        coolDown = 35;
                     } else if (level == 3) {
                         coolDown = 40;
                     } else if (level == 4) {
@@ -51,22 +51,25 @@ public class ForceDrainPower extends Power {
                     } else if (level == 6) {
                         coolDown = 55;
                     }
-                    if (target.getHealth() - hearts > 1) {
-                        target.setHealth(target.getHeight()-hearts);
-                    } else {
-                        target.setHealth(0.0D);
-                    }
-                    Player player = Bukkit.getPlayer(forcePlayer.getUuid());
-                    if (player != null && (player.isOnline())) {
-                        if (player.getHealth() + hearts >= player.getMaxHealth()) {
-                            player.setHealth(player.getMaxHealth());
-                        } else {
-                            player.setHealth(player.getHealth() + hearts);
-                        }
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20*debuff,1,false,false));
-                    }
+                    if (target instanceof Player) {
 
-                    forcePlayer.setCoolDown(getName(), coolDown);
+                        if (target.getHealth() - hearts > 1) {
+                            target.setHealth(target.getHeight() - hearts);
+                        } else {
+                            target.setHealth(0.0D);
+                        }
+                        Player player = Bukkit.getPlayer(forcePlayer.getUuid());
+                        if (player != null && (player.isOnline())) {
+                            if (player.getHealth() + hearts >= player.getMaxHealth()) {
+                                player.setHealth(player.getMaxHealth());
+                            } else {
+                                player.setHealth(player.getHealth() + hearts);
+                            }
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * debuff, 1, false, false));
+                        }
+
+                        forcePlayer.setCoolDown(getName(), coolDown);
+                    }
                 }
 
             });
